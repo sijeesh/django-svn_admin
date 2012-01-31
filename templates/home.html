@@ -1,0 +1,65 @@
+{% extends "./base.html" %}
+{% comment %}
+{% endcomment %}
+
+{% block head %}
+<title>Home</title>
+{% endblock %}
+
+
+{% block body %}
+  
+{% if user.is_authenticated %}    
+
+        {% if privillege == '1' or privillege == '2' %}
+                
+        
+        <table >
+        <tr><td colspan=10 align=right><a href='/login/'>Logout</a><br><br></td></tr>    
+        <!--<tr><td colspan=10 align=right><input type=submit value='Add new Repo' onclick="javascript:window.location='/svn_manage/new_repo/' "><input type=submit value='Add new group' onclick="javascript:window.location='/svn_manage/new_group/' "> <br><br></td></tr>-->
+        <tr><td colspan=10 align=right>{% if privillege == '1'  %}<a href="/svn_manage/new_repo/">Add new repo </a>{% endif %} &nbsp&nbsp <a href="/svn_manage/user_manage/">Users & groups</a></td></tr>    
+            <tr><th>Repo-Name</th><th>Admin</th><th>Managers</th><th>Created on</th><th>Total Users</th></tr>
+            {% for i in details %}
+                <form action="" method=post >
+                    {%csrf_token %}
+                <input type=hidden name=repo_name value={{ i.repo }}>    
+                <tr><td>{{ i.repo }}</td><td>{{ i.admins  }}</td><td>{{ i.manager }}</td><td>{{ i.date }}</td><td align=center>{{ i.users.total }}</td><td><input type=submit  onclick="javascript:this.form.action='/svn_manage/detailed_view/' " value='View more'></td><td><input onclick="javascript:this.form.action='/svn_manage/repo_set_members/' " type=submit value='Set user or group'></td>{% if privillege == '1' %} <td><input type=submit  onclick="javascript:this.form.action='/svn_manage/set_manager/' " value='Set manager'></td>{% endif %}
+                    {% if privillege == '1' %} <td>  {% if i.status == 1 %}<input onclick="javascript:this.form.action='/svn_manage/repo_deactivate/' " type=submit value='Deactivate' name=activate>{% else %}<input onclick="javascript:this.form.action='/svn_manage/repo_deactivate/' " type=submit value='Activate' name=activate> {% endif %} </td> {% endif %}</tr>
+                </form>
+            {% endfor %}
+        
+        
+        </table>
+        {% else %}
+        
+            
+            <table >
+            <tr><td colspan=10 align=right><!--<a href='/login/home'> Home </a>--><a href='/login/'>Logout</a>   <br><br></td></tr>    
+               
+            <tr><td>
+                <table border=1>
+                {% if details %}    
+                    <tr><td>Repository</td><td>Permission</td></tr>
+                    {% for j in details %}
+                            <tr><td>{{ j.0 }}</td><td>{{ j.1 }}</td></tr>
+                        
+                    {% endfor %}
+                {% else %}
+                    No Repositories found....
+                {% endif %}
+                </table>
+            </td></tr>
+            </table>
+        {% endif %}
+
+{% else %}
+        
+Please login..............
+    
+{% endif %}
+
+
+{% endblock %}
+
+
+

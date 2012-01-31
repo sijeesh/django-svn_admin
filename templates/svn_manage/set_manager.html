@@ -1,0 +1,37 @@
+{% extends "./base.html" %}
+{% comment %}
+{% endcomment %}
+
+{% block head %}
+<title>Set members</title>
+
+
+{% endblock %}
+{% block body %}
+<a href='/login/home'>Back</a><br><br>
+
+
+<h3>Set Repository Manager </h3>
+
+Repository  Name:: {{ repo }}
+
+<form action='' method=post>
+    {% csrf_token %}
+    <table>    
+    {% for  field in form %}
+    
+    <tr><td>{{ field.label }}</td><td>{{ field }}</td><td> {{field.errors }}</td><tr>
+    
+    {% endfor %}
+    <tr><td colspan=2 align=right><input type=submit value='Set' onclick="javascript:this.form.action='/svn_manage/save_manager' "> </td></tr>
+    </table>
+    
+<input type=hidden name=repo value={{ repo }}>    
+
+</form>
+
+
+{% endblock %}
+
+
+
